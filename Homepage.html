@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Homepage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 12px 16px;
+            display: inline-block;
+        }
+        .navbar a:hover {
+            background-color: #575757;
+        }
+        .welcome {
+            color: white;
+            font-size: 18px;
+        }
+        .container {
+            text-align: center;
+            padding: 50px;
+        }
+        .logout-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .logout-btn:hover {
+            background-color: darkred;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="welcome">Welcome, <span id="username">Customer</span></div>
+        <div>
+            <a href="#">Home</a>
+            <a href="#">Booking Service</a>
+            <a href="#">Tracking</a>
+            <a href="#">Previous Booking</a>
+            <a href="#">Contact Support</a>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Welcome to Your Dashboard</h1>
+        <p>Select an option from the menu to proceed.</p>
+    </div>
+
+    <script>
+        // Simulate getting username (in real case, get from session storage or backend)
+        let username = "Sample Data"; 
+        document.getElementById("username").textContent = username;
+
+        function logout() {
+            alert("Logging out...");
+            // Clear session details (if using localStorage/sessionStorage)
+            // localStorage.removeItem("user");
+            // Redirect to login page
+            window.location.href = "login.html";
+        }
+    </script>
+
+</body>
+</html>

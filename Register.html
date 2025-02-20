@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            flex-direction: column;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 90%;
+            padding: 8px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 90%;
+            padding: 10px;
+            background-color: #007BFF;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+        .success {
+            color: green;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Registration Form -->
+    <div class="container" id="registrationForm">
+        <h2>Complete Registration</h2>
+        <div id="error-message" class="error"></div>
+
+        <!-- Personal Information -->
+        <input type="text" id="fullName" placeholder="Full Name (Max 50 characters)" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="text" id="mobile" placeholder="Mobile Number (10 digits)" required>
+        <input type="text" id="address" placeholder="Address" required>
+
+        <!-- Username & Password -->
+        <input type="text" id="username" placeholder="Username (5-20 characters)" required>
+        <input type="password" id="password" placeholder="Password (6-30 characters)" required>
+        <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+
+        <button onclick="register()">Register</button>
+        <button onclick="resetForm()" style="background-color: gray;">Reset</button>
+    </div>
+
+    <!-- Login Form (Hidden Initially) -->
+    <div class="container hidden" id="loginForm">
+        <h2>Login</h2>
+        <div id="login-error-message" class="error"></div>
+        <input type="text" id="loginUsername" placeholder="Username" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <button onclick="login()">Login</button>
+    </div>
+
+    <script>
+        function register() {
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const mobile = document.getElementById('mobile').value;
+            const address = document.getElementById('address').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const errorMessage = document.getElementById('error-message');
+
+            errorMessage.textContent = '';
+
+            // Validation checks
+            if (fullName.length > 50 || fullName.length === 0) {
+                errorMessage.textContent = 'Full Name must be between 1 and 50 characters.';
+                return;
+            }
+            if (!email.includes('@')) {
+                errorMessage.textContent = 'Enter a valid email.';
+                return;
+            }
+            if (!/^\d{10}$/.test(mobile)) {
+                errorMessage.textContent = 'Mobile number must be 10 digits.';
+                return;
+            }
+            if (address.length < 5) {
+                errorMessage.textContent = 'Address must be at least 5 characters.';
+                return;
+            }
+            if (username.length < 5 || username.length > 20) {
+                errorMessage.textContent = 'Username must be between 5 and 20 characters.';
+                return;
+            }
+            if (password.length < 6 || password.length > 30) {
+                errorMessage.textContent = 'Password must be between 6 and 30 characters.';
+                return;
+            }
+            if (password !== confirmPassword) {
+                errorMessage.textContent = 'Passwords do not match.';
+                return;
+            }
+
+            // Store user data in localStorage (for demo purposes)
+            localStorage.setItem('registeredUsername', username);
+            localStorage.setItem('registeredPassword', password);
+            localStorage.setItem('registeredName', fullName);
+            localStorage.setItem('registeredEmail', email);
+
+            // Show success message
+            document.getElementById('registrationForm').innerHTML = 
+                `<p class='success'>Registration Successful! You can now login.</p>`;
+            
+            // Show login form
+            setTimeout(() => {
+                document.getElementById('registrationForm').classList.add('hidden');
+                document.getElementById('loginForm').classList.remove('hidden');
+            }, 1500);
+        }
+
+        function resetForm() {
+            document.getElementById('fullName').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('mobile').value = '';
+            document.getElementById('address').value = '';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('confirmPassword').value = '';
+            document.getElementById('error-message').textContent = '';
+        }
+
+        function login() {
+            const loginUsername = document.getElementById('loginUsername').value;
+            const loginPassword = document.getElementById('loginPassword').value;
+            const loginErrorMessage = document.getElementById('login-error-message');
+
+            loginErrorMessage.textContent = '';
+
+            const storedUsername = localStorage.getItem('registeredUsername');
+            const storedPassword = localStorage.getItem('registeredPassword');
+
+            if (loginUsername === storedUsername && loginPassword === storedPassword) {
+                document.getElementById('loginForm').innerHTML = 
+                    `<p class='success'>Login Successful! Welcome, ${localStorage.getItem('registeredName')}.</p>`;
+            } else {
+                loginErrorMessage.textContent = 'Invalid username or password.';
+            }
+        }
+    </script>
+
+</body>
+</html>
