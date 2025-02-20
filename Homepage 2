@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Officer Home Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #007bff;
+            padding: 15px;
+            color: white;
+        }
+        .menu a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 15px;
+            margin: 0 5px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        .menu a:hover {
+            background-color: #0056b3;
+        }
+        .content {
+            margin-top: 20px;
+            padding: 20px;
+        }
+        #logout {
+            background-color: red;
+            padding: 8px 15px;
+            border-radius: 5px;
+        }
+        #logout:hover {
+            background-color: darkred;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo"><b>Dashboard</b></div>
+        <div class="menu">
+            <a href="#">Home</a>
+            <a href="#">Tracking</a>
+            <a href="#">Pickup Scheduling</a>
+            <a href="#">Delivery Status</a>
+            <a href="#">Previous Booking</a>
+            <a href="index.html" id="logout">Logout</a>
+        </div>
+        <div class="welcome" id="welcomeText">Welcome, Officer</div>
+    </div>
+
+    <div class="content">
+        <h1>Welcome to the Officer Dashboard</h1>
+        <p>Select an option from the menu to proceed.</p>
+    </div>
+
+    <script>
+        // Simulate fetching username (Example)
+        let username = "Officer John"; 
+        document.getElementById("welcomeText").textContent = "Welcome, " + username;
+
+        // Logout functionality (Example)
+        document.getElementById("logout").addEventListener("click", function() {
+            alert("Logging out...");
+            window.location.href = "login.html"; // Redirect to login page
+        });
+    </script>
+</body>
+</html>
