@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Booking History - Customer</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+    .header {
+      background-color: #007bff;
+      color: #fff;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header .welcome {
+      font-size: 16px;
+    }
+    .header button {
+      background-color: #ff4d4d;
+      border: none;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: left;
+      font-size: 14px;
+    }
+    th {
+      background-color: #007bff;
+      color: #fff;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    .pagination {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .pagination button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      margin: 0 5px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s;
+    }
+    .pagination button:hover {
+      background-color: #0056b3;
+    }
+    .pagination button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header with Welcome and Logout -->
+  <div class="header">
+    <div class="logo">
+      <h1 style="margin: 0; font-size: 20px;">Booking History</h1>
+    </div>
+    <div class="welcome">
+      Welcome, <span id="username">Customer</span>
+      <button onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="container">
+    <h2>Your Previous Bookings</h2>
+    <table id="bookingTable">
+      <thead>
+        <tr>
+          <th>Customer ID</th>
+          <th>Booking ID</th>
+          <th>Booking Date</th>
+          <th>Receiver Name</th>
+          <th>Delivered Address</th>
+          <th>Amount</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Booking data rows will be populated here -->
+      </tbody>
+    </table>
+    <!-- Pagination Buttons -->
+    <div class="pagination">
+      <button id="prevBtn" onclick="prevPage()">Previous</button>
+      <button id="nextBtn" onclick="nextPage()">Next</button>
+    </div>
+  </div>
+
+  <script>
+    // Dummy booking data
+    const bookings = [
+      { customerId: "CUST001", bookingId: "BKG000000001", bookingDate: "2025-01-15", receiverName: "John Doe", deliveredAddress: "123 Main St, City", amount: "$50", status: "Delivered" },
+      { customerId: "CUST001", bookingId: "BKG000000002", bookingDate: "2025-01-20", receiverName: "Jane Smith", deliveredAddress: "456 Elm St, City", amount: "$75", status: "In Transit" },
+      { customerId: "CUST001", bookingId: "BKG000000003", bookingDate: "2025-02-01", receiverName: "Alice Johnson", deliveredAddress: "789 Oak St, City", amount: "$60", status: "Delivered" },
+      { customerId: "CUST001", bookingId: "BKG000000004", bookingDate: "2025-02-05", receiverName: "Bob Brown", deliveredAddress: "321 Pine St, City", amount: "$85", status: "Cancelled" },
+      { customerId: "CUST001", bookingId: "BKG000000005", bookingDate: "2025-02-10", receiverName: "Charlie Green", deliveredAddress: "654 Maple St, City", amount: "$90", status: "Delivered" },
+      { customerId: "CUST001", bookingId: "BKG000000006", bookingDate: "2025-02-12", receiverName: "David Blue", deliveredAddress: "987 Cedar St, City", amount: "$65", status: "Delivered" },
+      { customerId: "CUST001", bookingId: "BKG000000007", bookingDate: "2025-02-15", receiverName: "Eva White", deliveredAddress: "147 Birch St, City", amount: "$55", status: "In Transit" },
+      { customerId: "CUST001", bookingId: "BKG000000008", bookingDate: "2025-02-18", receiverName: "Frank Black", deliveredAddress: "258 Spruce St, City", amount: "$80", status: "Delivered" },
+      { customerId: "CUST001", bookingId: "BKG000000009", bookingDate: "2025-02-20", receiverName: "Grace Red", deliveredAddress: "369 Walnut St, City", amount: "$70", status: "Delivered" },
+      { customerId: "CUST001", bookingId: "BKG000000010", bookingDate: "2025-02-22", receiverName: "Henry Purple", deliveredAddress: "159 Ash St, City", amount: "$95", status: "In Transit" }
+    ];
+
+    // Pagination variables
+    let currentPage = 1;
+    const rowsPerPage = 5;
+    const tableBody = document.querySelector("#bookingTable tbody");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    // Function to render table rows based on current page
+    function renderTable() {
+      tableBody.innerHTML = "";
+      let start = (currentPage - 1) * rowsPerPage;
+      let end = start + rowsPerPage;
+      const pageItems = bookings.slice(start, end);
+
+      pageItems.forEach(item => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.customerId}</td>
+          <td>${item.bookingId}</td>
+          <td>${item.bookingDate}</td>
+          <td>${item.receiverName}</td>
+          <td>${item.deliveredAddress}</td>
+          <td>${item.amount}</td>
+          <td>${item.status}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+      updateButtons();
+    }
+
+    // Function to update button state
+    function updateButtons() {
+      prevBtn.disabled = currentPage === 1;
+      nextBtn.disabled = currentPage * rowsPerPage >= bookings.length;
+    }
+
+    // Pagination functions
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        renderTable();
+      }
+    }
+
+    function nextPage() {
+      if (currentPage * rowsPerPage < bookings.length) {
+        currentPage++;
+        renderTable();
+      }
+    }
+
+    // Dummy logout function
+    function logout() {
+      alert("Logged out successfully!");
+      window.location.href = "index.html"; // Change URL as needed
+    }
+
+    // Initial render
+    renderTable();
+  </script>
+</body>
+</html>
