@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Officer Tracking Status</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #0044cc, #0099ff);
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .header button {
+      background: #fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 1000px;
+      margin: auto;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    .search-box {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .search-box input {
+      flex: 1;
+      padding: 10px;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .search-box button {
+      padding: 10px 20px;
+      border: none;
+      background: #0044cc;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+    }
+    th {
+      background: #0044cc;
+      color: #fff;
+    }
+    tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    .no-results {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 16px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Tracking Status - Officer</h1>
+    <div>
+      Welcome, Officer&nbsp;|&nbsp;
+      <button onclick="logout()">Logout</button>
+    </div>
+  </div>
+  
+  <div class="container">
+    <!-- Search Box -->
+    <div class="search-box">
+      <input type="text" id="customerId" placeholder="Enter Customer ID" />
+      <input type="text" id="bookingId" placeholder="Enter Booking ID" />
+      <button onclick="performSearch()">Search</button>
+    </div>
+    
+    <!-- Table of Shipped Packages -->
+    <div id="tableContainer">
+      <table id="shipmentsTable">
+        <thead>
+          <tr>
+            <th>Booking ID</th>
+            <th>Customer ID</th>
+            <th>Status</th>
+            <th>Shipping Date</th>
+          </tr>
+        </thead>
+        <tbody id="shipmentsBody">
+          <!-- Rows will be populated here -->
+        </tbody>
+      </table>
+      <div id="noResults" class="no-results" style="display: none;">
+        No matching packages found.
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Dummy data for shipped packages (sorted by latest shipping date)
+    const shipments = [
+      { bookingId: "123456789012", customerId: "CUST001", status: "Delivered", shippingDate: "2025-02-20" },
+      { bookingId: "234567890123", customerId: "CUST002", status: "In Transit", shippingDate: "2025-02-21" },
+      { bookingId: "345678901234", customerId: "CUST003", status: "Shipped", shippingDate: "2025-02-19" },
+      { bookingId: "456789012345", customerId: "CUST001", status: "Out for Delivery", shippingDate: "2025-02-21" },
+      { bookingId: "567890123456", customerId: "CUST004", status: "In Transit", shippingDate: "2025-02-18" }
+    ];
+    
+    // Function to sort shipments by shippingDate (latest first)
+    function sortShipments(data) {
+      return data.sort((a, b) => new Date(b.shippingDate) - new Date(a.shippingDate));
+    }
+    
+    // Function to display shipments in the table
+    function displayShipments(data) {
+      const tbody = document.getElementById("shipmentsBody");
+      tbody.innerHTML = "";
+      if (data.length === 0) {
+        document.getElementById("noResults").style.display = "block";
+      } else {
+        document.getElementById("noResults").style.display = "none";
+        data.forEach(item => {
+          const row = document.createElement("tr");
+          row.innerHTML = `<td>${item.bookingId}</td>
+                           <td>${item.customerId}</td>
+                           <td>${item.status}</td>
+                           <td>${item.shippingDate}</td>`;
+          tbody.appendChild(row);
+        });
+      }
+    }
+    
+    // Initial display of all shipments sorted by latest shipping date
+    displayShipments(sortShipments(shipments));
+    
+    // Function to perform search based on Customer ID and/or Booking ID
+    function performSearch() {
+      const customerInput = document.getElementById("customerId").value.trim().toLowerCase();
+      const bookingInput = document.getElementById("bookingId").value.trim();
+      
+      const filteredShipments = shipments.filter(shipment => {
+        const matchCustomer = customerInput === "" || shipment.customerId.toLowerCase().includes(customerInput);
+        const matchBooking = bookingInput === "" || shipment.bookingId.includes(bookingInput);
+        return matchCustomer && matchBooking;
+      });
+      
+      displayShipments(sortShipments(filteredShipments));
+    }
+    
+    // Dummy logout function (for demonstration)
+    function logout() {
+      alert("Logged out successfully!");
+      // In a real application, add your logout logic here.
+      window.location.reload();
+    }
+  </script>
+</body>
+</html>
