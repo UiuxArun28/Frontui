@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pickup Scheduling - Officer</title>
+  <style>
+    :root {
+      --primary-color: #2C3E50;
+      --secondary-color: #2980B9;
+      --accent-color: #E74C3C;
+      --bg-color: #ECF0F1;
+      --white: #FFFFFF;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-color);
+      margin: 0;
+      padding: 0;
+    }
+    .header {
+      background: var(--primary-color);
+      color: var(--white);
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 20px;
+      background: var(--white);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+    }
+    .search-section {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .search-section input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .search-section button {
+      padding: 10px 20px;
+      background: var(--secondary-color);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #bookingDetails {
+      margin-bottom: 20px;
+      border-top: 1px solid #ccc;
+      padding-top: 20px;
+    }
+    #bookingDetails h3 {
+      margin-bottom: 10px;
+    }
+    #bookingDetails p {
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+    #bookingDetails label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    #bookingDetails input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    #bookingDetails button {
+      padding: 10px 20px;
+      background: var(--secondary-color);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #message {
+      font-size: 16px;
+      color: var(--secondary-color);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Pickup Scheduling - Officer</h1>
+  </div>
+  <div class="container">
+    <!-- Search Section -->
+    <div class="search-section">
+      <input type="text" id="bookingIdInput" placeholder="Enter Booking ID" />
+      <button onclick="searchBooking()">Search</button>
+    </div>
+    <!-- Booking Details Section -->
+    <div id="bookingDetails" style="display: none;">
+      <h3>Booking Details</h3>
+      <p><strong>Booking ID:</strong> <span id="bookingIdDisplay"></span></p>
+      <label for="pickupDateTime">Select Pickup Date &amp; Time:</label>
+      <input type="datetime-local" id="pickupDateTime" />
+      <button onclick="schedulePickup()">Schedule Pickup</button>
+    </div>
+    <!-- Message Section -->
+    <div id="message"></div>
+  </div>
+
+  <script>
+    function searchBooking() {
+      var bookingId = document.getElementById("bookingIdInput").value.trim();
+      if (bookingId === "") {
+        alert("Please enter a Booking ID.");
+        return;
+      }
+      // In a real application, you would query your backend here.
+      document.getElementById("bookingDetails").style.display = "block";
+      document.getElementById("bookingIdDisplay").innerText = bookingId;
+      document.getElementById("message").innerText = "";
+    }
+    function schedulePickup() {
+      var pickupDateTime = document.getElementById("pickupDateTime").value;
+      if (pickupDateTime === "") {
+        alert("Please select a pickup date and time.");
+        return;
+      }
+      var bookingId = document.getElementById("bookingIdDisplay").innerText;
+      // In a real application, you would send the scheduling data to the server.
+      document.getElementById("message").innerText =
+        "Pickup scheduled for Booking ID " + bookingId + " on " + pickupDateTime;
+      // Reset the form (optional)
+      document.getElementById("bookingDetails").style.display = "none";
+      document.getElementById("bookingIdInput").value = "";
+      document.getElementById("pickupDateTime").value = "";
+    }
+  </script>
+</body>
+</html>
