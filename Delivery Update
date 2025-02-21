@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delivery Update - Officer</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #ECF0F1;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: #FFFFFF;
+      padding: 25px 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      max-width: 500px;
+      width: 90%;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      margin: 0;
+      color: #2C3E50;
+      font-size: 24px;
+    }
+    .search-section {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .search-section input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    .search-section button {
+      padding: 10px 20px;
+      border: none;
+      background: #2980B9;
+      color: #FFFFFF;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+    .search-section button:hover {
+      background: #E74C3C;
+    }
+    .status-section {
+      display: none;
+      margin-top: 20px;
+      border-top: 1px solid #ccc;
+      padding-top: 20px;
+    }
+    .status-section p {
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+    .status-section label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .status-section select {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+    .status-section button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      background: #2980B9;
+      color: #FFFFFF;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+    .status-section button:hover {
+      background: #E74C3C;
+    }
+    .message {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 16px;
+      color: #2980B9;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Delivery Update - Officer</h1>
+    </div>
+    <!-- Search Section -->
+    <div class="search-section">
+      <input type="text" id="bookingIdInput" placeholder="Enter Booking ID" />
+      <button onclick="searchBooking()">Search</button>
+    </div>
+    <!-- Status Update Section -->
+    <div id="bookingDetails" class="status-section">
+      <p><strong>Booking ID:</strong> <span id="bookingIdDisplay"></span></p>
+      <label for="deliveryStatus">Update Delivery Status:</label>
+      <select id="deliveryStatus">
+        <option value="Picked up">Picked up</option>
+        <option value="In Transit">In Transit</option>
+        <option value="Delivered">Delivered</option>
+        <option value="Returned">Returned</option>
+      </select>
+      <button onclick="updateStatus()">Update Status</button>
+    </div>
+    <!-- Confirmation Message -->
+    <div id="message" class="message"></div>
+  </div>
+
+  <script>
+    function searchBooking() {
+      const bookingId = document.getElementById("bookingIdInput").value.trim();
+      if (bookingId === "") {
+        alert("Please enter a Booking ID.");
+        return;
+      }
+      // In a real application, you would verify the booking here.
+      document.getElementById("bookingIdDisplay").innerText = bookingId;
+      document.getElementById("bookingDetails").style.display = "block";
+      document.getElementById("message").innerText = "";
+    }
+    
+    function updateStatus() {
+      const bookingId = document.getElementById("bookingIdDisplay").innerText;
+      const status = document.getElementById("deliveryStatus").value;
+      // In a real application, update the delivery status on the server.
+      document.getElementById("message").innerText = "Delivery status for Booking ID " 
+        + bookingId + " updated to '" + status + "'.";
+      
+      // Optionally, reset the form.
+      document.getElementById("bookingDetails").style.display = "none";
+      document.getElementById("bookingIdInput").value = "";
+    }
+  </script>
+</body>
+</html>
