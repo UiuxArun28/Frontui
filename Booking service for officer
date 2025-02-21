@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parcel Booking - Officer</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #0044cc, #0099ff);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 55%;
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        h2 {
+            text-align: center;
+            color: #222;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #0044cc;
+            outline: none;
+            box-shadow: 0px 0px 5px rgba(0, 68, 204, 0.5);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #0044cc;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn:hover {
+            background: #002a80;
+        }
+        .checkbox-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .checkbox-group input {
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Parcel Booking - Officer</h2>
+
+    <!-- Officer Input for Sender Details -->
+    <div class="form-group">
+        <label>Sender Name:</label>
+        <input type="text" id="senderName" placeholder="Enter sender's name">
+    </div>
+    <div class="form-group">
+        <label>Sender Address:</label>
+        <input type="text" id="senderAddress" placeholder="Enter sender's address">
+    </div>
+    <div class="form-group">
+        <label>Contact Details:</label>
+        <input type="text" id="senderContact" placeholder="Enter sender's contact number">
+    </div>
+
+    <!-- Receiver Information -->
+    <div class="form-group">
+        <label>Receiver Name:</label>
+        <input type="text" id="receiverName" placeholder="Enter receiver's name">
+    </div>
+    <div class="form-group">
+        <label>Receiver Address:</label>
+        <input type="text" id="receiverAddress" placeholder="Enter receiver's address">
+    </div>
+    <div class="form-group">
+        <label>Pin Code:</label>
+        <input type="text" id="pinCode" placeholder="Enter receiver's pin code">
+    </div>
+    <div class="form-group">
+        <label>Receiver Contact:</label>
+        <input type="text" id="receiverContact" placeholder="Enter receiver's contact number">
+    </div>
+
+    <!-- Parcel Details -->
+    <div class="form-group">
+        <label>Parcel Size & Weight:</label>
+        <input type="text" id="parcelSize" placeholder="Enter size & weight">
+    </div>
+    <div class="form-group">
+        <label>Content Description:</label>
+        <textarea id="parcelDescription" placeholder="Enter description for tracking & safety"></textarea>
+    </div>
+
+    <!-- Shipping Options -->
+    <div class="form-group">
+        <label>Delivery Speed:</label>
+        <select id="deliverySpeed">
+            <option value="">Select Delivery Speed</option>
+            <option value="standard">Standard</option>
+            <option value="express">Express</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Packaging Preferences:</label>
+        <select id="packaging">
+            <option value="">Select Packaging</option>
+            <option value="standard">Standard Packaging</option>
+            <option value="custom">Custom Packaging</option>
+            <option value="eco">Eco-Friendly Packaging</option>
+            <option value="fragile">Fragile Item Handling</option>
+        </select>
+    </div>
+
+    <!-- Date & Time Selection -->
+    <div class="form-group">
+        <label>Pickup/Drop-off Time:</label>
+        <input type="datetime-local" id="pickupTime">
+    </div>
+
+    <!-- Service Cost & Payment -->
+    <div class="form-group">
+        <label>Service Cost:</label>
+        <input type="text" id="serviceCost" placeholder="Calculated Cost" readonly>
+    </div>
+    <div class="form-group">
+        <label>Payment Method:</label>
+        <select id="paymentMethod">
+            <option value="">Select Payment Method</option>
+            <option value="creditCard">Credit Card</option>
+            <option value="debitCard">Debit Card</option>
+            <option value="paypal">PayPal</option>
+            <option value="cod">Cash on Delivery</option>
+        </select>
+    </div>
+
+    <!-- Additional Services -->
+    <div class="form-group">
+        <label>Additional Services:</label>
+        <div class="checkbox-group">
+            <input type="checkbox" id="insurance"> Insurance
+            <input type="checkbox" id="tracking"> Tracking Service
+        </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button class="btn" onclick="calculateCost()">Confirm Booking</button>
+</div>
+
+<script>
+    function calculateCost() {
+        let baseCost = 50;
+        let deliverySpeed = document.getElementById("deliverySpeed").value;
+        let packaging = document.getElementById("packaging").value;
+        let insurance = document.getElementById("insurance").checked;
+        let tracking = document.getElementById("tracking").checked;
+
+        if (deliverySpeed === "express") baseCost += 30;
+        if (packaging === "custom") baseCost += 20;
+        if (packaging === "eco") baseCost += 10;
+        if (packaging === "fragile") baseCost += 25;
+        if (insurance) baseCost += 15;
+        if (tracking) baseCost += 10;
+
+        document.getElementById("serviceCost").value = "$" + baseCost;
+
+        alert("Parcel Booking Confirmed! Estimated Cost: $" + baseCost);
+    }
+</script>
+
+</body>
+</html>
