@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment & Invoice</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #0044cc, #0099ff);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      width: 50%;
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+    h2 {
+      color: #222;
+      margin-bottom: 15px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      text-align: left;
+      margin-top: 10px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+    input:focus, select:focus {
+      border-color: #0044cc;
+      outline: none;
+      box-shadow: 0px 0px 5px rgba(0, 68, 204, 0.5);
+    }
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: #0044cc;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 15px;
+      transition: 0.3s;
+    }
+    .btn:hover {
+      background: #002a80;
+    }
+    .back-btn {
+      background: #777;
+    }
+    .back-btn:hover {
+      background: #555;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Payment Section -->
+  <div class="container" id="paymentSection">
+    <h2>Payment Page</h2>
+    <p style="text-align: right;">
+      Welcome, <span id="username">Customer</span> | 
+      <button class="btn back-btn" onclick="logout()">Logout</button>
+    </p>
+
+    <!-- Payment Form -->
+    <div id="paymentForm">
+      <label>Bill Amount:</label>
+      <input type="text" id="billAmount" value="$100" readonly>
+
+      <label>Mode of Payment:</label>
+      <select id="paymentMode">
+        <option value="debit">Debit Card</option>
+        <option value="credit">Credit Card</option>
+      </select>
+
+      <button class="btn" onclick="showCardForm()">Pay Now</button>
+      <button class="btn back-btn" onclick="goToBooking()">Back to Home</button>
+    </div>
+
+    <!-- Card Details Form (Hidden Initially) -->
+    <div id="cardForm" class="hidden">
+      <h2>Enter Card Details</h2>
+      <label>Credit Card:</label>
+      <input type="text" value="Credit Card" readonly>
+
+      <label>Card Number (6 digits):</label>
+      <input type="text" id="cardNumber" placeholder="Enter 6-digit card number" maxlength="6">
+
+      <label>Card Holder Name:</label>
+      <input type="text" id="cardHolder" placeholder="Enter cardholder name">
+
+      <label>Expiry Date (MM/YY):</label>
+      <input type="text" id="expiryDate" placeholder="MM/YY">
+
+      <label>CVV (3 digits):</label>
+      <input type="password" id="cvv" placeholder="***" maxlength="3">
+
+      <button class="btn" onclick="makePayment()">Make Payment</button>
+      <button class="btn back-btn" onclick="goBack()">Back</button>
+    </div>
+  </div>
+
+  <!-- Invoice Section (Hidden Initially) -->
+  <div class="container hidden" id="invoiceSection">
+    <h2>Invoice</h2>
+    <p>
+      <strong>Booking ID:</strong> <span id="invoiceBookingID">Loading...</span>
+    </p>
+    <p>
+      <strong>Bill Amount:</strong> <span id="invoiceBillAmount">Loading...</span>
+    </p>
+    <p>The invoice file has been downloaded automatically.</p>
+    <button class="btn" onclick="goHome()">Back to Home</button>
+  </div>
+
+  <script>
+    function logout() {
+      alert("Logged out successfully!");
+      // For demonstration, we reload the page.
+      window.location.reload();
+    }
+
+    function goToBooking() {
+      // In a full application, this would navigate to the booking page.
+      alert("Redirecting to the Booking page.");
+      window.location.reload();
+    }
+
+    function showCardForm() {
+      document.getElementById("paymentForm").classList.add("hidden");
+      document.getElementById("cardForm").classList.remove("hidden");
+    }
+
+    function goBack() {
+      document.getElementById("cardForm").classList.add("hidden");
+      document.getElementById("paymentForm").classList.remove("hidden");
+    }
+
+    function makePayment() {
+      var cardNumber = document.getElementById("cardNumber").value;
+      var cardHolder = document.getElementById("cardHolder").value;
+      var expiryDate = document.getElementById("expiryDate").value;
+      var cvv = document.getElementById("cvv").value;
+
+      if (cardNumber.length !== 6 || !/^\d+$/.test(cardNumber)) {
+        alert("Please enter a valid 6-digit card number.");
+        return;
+      }
+      if (cvv.length !== 3 || !/^\d+$/.test(cvv)) {
+        alert("Please enter a valid 3-digit CVV.");
+        return;
+      }
+
+      // Generate a booking ID
+      var bookingID = "BKG" + Math.floor(1000 + Math.random() * 9000);
+      var billAmount = document.getElementById("billAmount").value;
+
+      // Display the Invoice Section
+      document.getElementById("paymentSection").classList.add("hidden");
+      document.getElementById("invoiceSection").classList.remove("hidden");
+      document.getElementById("invoiceBookingID").innerText = bookingID;
+      document.getElementById("invoiceBillAmount").innerText = billAmount;
+
+      // Generate invoice content
+      var invoiceContent = "Invoice\n\nBooking ID: " + bookingID + "\nBill Amount: " + billAmount;
+      var blob = new Blob([invoiceContent], { type: "text/plain" });
+      var link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = "invoice.txt";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      alert("Payment Successful! Booking ID: " + bookingID);
+    }
+
+    function goHome() {
+      // In a full application, this would redirect to the home/booking page.
+      window.location.reload();
+    }
+  </script>
+</body>
+</html>
